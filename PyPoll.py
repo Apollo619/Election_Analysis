@@ -20,6 +20,9 @@ winning_candidate = ""
 winning_count = 0
 winning_percentage = 0
 
+# Definig candiate results
+candidate_results = ""
+
 # Open the election results and read the file.
 with open(file_to_load) as election_data:
 
@@ -49,33 +52,53 @@ with open(file_to_load) as election_data:
         # Increase the candidate vote by 1 each time their name appears. 
         candidate_votes[candidate_name] += 1
 
-# Getting votes from each candidate
-for candidate_name in candidate_votes:
-    
-    # Retrieve vote count of a candidate.
-    votes = candidate_votes[candidate_name]
+with open(file_to_save, "w") as txt_file:
 
-    # Calculate the % for each candidate
-    vote_percentage = float(votes) / float(total_votes) * 100
+    # Writing statement to text file
+    election_results = (
+        f'\nElection Results\n'
+        f'-------------------------\n'
+        f'Total Votes: {total_votes:,}\n'
+        f'-------------------------\n')
 
-    # Print the candiate name and percentage of vote.
-    print(
-        f"{candidate_name}: {vote_percentage:.1f}% ({votes:,})\n")
+    print(election_results, end="")
 
-    # Determine winning vote count and candidate
-    if (votes > winning_count) and (vote_percentage > winning_percentage):
-        # If true then set winning count = votes and winning percent = vote_percentage
-        winning_count = votes
-        winning_percentage = vote_percentage
-        # Set winning candidate equal to the candidate's name
-        winning_candidate = candidate_name
+    # Save the final vote count tot he text file. 
+    txt_file.write(election_results)
 
-# Print out the winning candidate summary
-winning_candidate_summary = (
-        f'---------------------\n'
-        f'Winner: {winning_candidate}\n'
-        f'Winning Vote Count: {winning_count:,}\n'
-        f'Winning Percentage: {winning_percentage:.1f}%\n'
-        f'---------------------\n')
+    # Getting votes from each candidate
+    for candidate_name in candidate_votes:
+        
+        # Retrieve vote count of a candidate.
+        votes = candidate_votes[candidate_name]
 
-print(winning_candidate_summary)
+        # Calculate the % for each candidate
+        vote_percentage = float(votes) / float(total_votes) * 100
+
+        # Print the candiate name and percentage of vote.
+        candidate_results = (f"{candidate_name}: {vote_percentage:.1f}% ({votes:,})\n")
+        # Print candidate results to terminal
+        print(candidate_results)
+        # Save candidate resutls to the TXT file
+        txt_file.write(candidate_results)
+
+        # Determine winning vote count and candidate
+        if (votes > winning_count) and (vote_percentage > winning_percentage):
+            # If true then set winning count = votes and winning percent = vote_percentage
+            winning_count = votes
+            winning_percentage = vote_percentage
+            # Set winning candidate equal to the candidate's name
+            winning_candidate = candidate_name
+
+    # Print out the winning candidate summary
+    winning_candidate_summary = (
+            f'---------------------\n'
+            f'Winner: {winning_candidate}\n'
+            f'Winning Vote Count: {winning_count:,}\n'
+            f'Winning Percentage: {winning_percentage:.1f}%\n'
+            f'---------------------\n')
+
+    print(winning_candidate_summary)
+
+    # Save the winning candiate's results to the text file.
+    txt_file.write(winning_candidate_summary)
